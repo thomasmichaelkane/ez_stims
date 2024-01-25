@@ -1,0 +1,6 @@
+/experiments
+/_archive
+/.venv
+__pycache__/
+*.py[cod]
+
