@@ -1,2 +1,2 @@
-# kalatsky
-Python script for presenting scalable variations of kalatsky-style stimuli on a computer monitor using PsychoPy
+# ez_stims
+Python script for easy out-of-the-box stimuli using PsychoPy
