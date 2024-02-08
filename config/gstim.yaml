@@ -1,0 +1,49 @@
+global:
+    
+    iterations: 2 # number of iterations of all stimuli
+    randomise: True # randomise the order of stimulus presentation (retained over iterations)
+    
+    # intro - before stimuli begin
+    intro_active: False
+    intro_duration: 5 # seconds
+    
+    # outro - after stimuli finish
+    outro_active: False
+    outro_duration: 5 # seconds
+    
+    # baseline - screen between stimuli
+    baseline_duration: 2 # seconds
+    baseline_color:
+        - 0.5 #R
+        - 0.5 #G
+        - 0.5 #B
+
+paradigm:
+  -
+    name:                 flicker_1
+    behavior:             FLICKER # FLICKER or DRIFT
+    duration:             5 # seconds
+    spatial_frequency:    0.1 # cycles/degree
+    orientation:          0.0 # degrees 0 is vertical bars 180 is horizontal
+    contrast:             1.0 # 0 to 1
+    velocity:             2 # degrees/second
+      
+  -               
+    name:                 drift_1
+    behavior:             DRIFT
+    duration:             5
+    spatial_frequency:    0.3
+    orientation:          90.0
+    contrast:             1.0
+    velocity:             5
+      
+  # -
+  #   name:                 drift_2
+  #   behavior:             DRIFT
+  #   duration:             3
+  #   spatial_frequency:    0.5
+  #   orientation:          45.0
+  #   contrast:             0.6
+  #   velocity:             15
+
+  # -      ...

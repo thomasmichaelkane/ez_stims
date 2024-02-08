@@ -57,21 +57,22 @@ import numpy as np
 from rich.table import Table
 from rich.console import Console
 
-from .utils import *
-from .enums import StimType, Behavior
+from ez_stims.utils import *
+from ez_stims.enums import StimType, KBehavior
+
 class Kalatsky():
 
-    def __init__(self, settings):
+    def __init__(self, config, monitor_config):
         
-        # assign settings as attributes
-        for name, value in settings["monitor"].items():
+        # assign config as attributes
+        for name, value in monitor_config.items():
             setattr(self, name, value)
             
-        for name, value in settings["kalatsky"].items():
+        for name, value in config.items():
             setattr(self, name, value)
             
         self.stimulus_type = StimType[self.stimulus_type]
-        self.behavior = Behavior[self.behavior]
+        self.behavior = KBehavior[self.behavior]
 
         # initialise variables and left and right check arrays
         self.flipped = False

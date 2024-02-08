@@ -1,4 +1,5 @@
 /experiments
+/logs
 /_archive
 /.venv
 __pycache__/

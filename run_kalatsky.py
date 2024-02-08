@@ -29,20 +29,30 @@ reproducability.
 """
 from psychopy import logging
 
-from lib import experiments
-from lib.utils import load_config
+from ez_stims import Kalatsky, setup
 
-def main():
+def run():
     
-    settings = load_config()
+    kalatsky_config = setup.config('kalatsky.yaml')
+    monitor_config = setup.config('monitor.yaml')
     
     logging.console.setLevel(logging.CRITICAL)
     
-    kalatsky = experiments.setup_kalatsky(settings)
+    monitor = setup.setup_monitor(**monitor_config)
+    window = setup.setup_window(monitor, **monitor_config)
+
+    kalatsky = Kalatsky(kalatsky_config, monitor_config)
+    kalatsky.add_window(window)
+    
+    kalatsky.print_settings()
+    
+    input("Press ENTER to start stimulus...")
 
     kalatsky.background()
     kalatsky.wait()
     kalatsky.start_timer()
+    
     kalatsky.present()
 
-main()
+if __name__ == '__main__':
+    run()

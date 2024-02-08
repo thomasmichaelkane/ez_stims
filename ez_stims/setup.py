@@ -1,23 +1,12 @@
-"""
-This module provides utility functions for setting up a Psychopy experiment environment, including configuring a monitor, creating a stimulus presentation window, and calculating the viewing angle of the screen.
-
-Module Functions:
-- load_config(): Loads the configuration file.
-- setup_monitor(resolution, screen_width, viewing_distance, **kwargs): Setup a Psychopy monitor object with specified settings.
-- setup_window(monitor, screen_number, **kwargs): Setup a Psychopy window for stimulus presentation.
-- get_viewing_angle(screen_width, viewing_distance): Calculate the viewing angle of the screen.
-"""
-
-import numpy as np
 import yaml
 from psychopy import visual, monitors
 
-def load_config():
+def config(config_file):
     
-    with open('config.yaml') as config:
-        settings = yaml.load(config.read(), Loader=yaml.Loader)
+    with open(f"config/{config_file}") as config:
+        config = yaml.load(config.read(), Loader=yaml.Loader)
         
-    return settings
+    return config
 
 def setup_monitor(resolution, screen_width, viewing_distance, **kwargs):
     """ 
@@ -59,18 +48,3 @@ def setup_window(monitor, screen_number, **kwargs):
                            allowGUI=False)
     
     return window
-
-def get_viewing_angle(screen_width, viewing_distance):
-    """
-    Calculate the viewing angle of the screen.
-
-    Parameters:
-    - screen_width (float): Physical width of the screen in meters.
-    - viewing_distance (float): Distance from the observer to the screen in meters.
-
-    Returns:
-    - theta (float): Viewing angle of the screen in degrees.
-    """
-    theta = 2 * np.arctan((screen_width/2)/viewing_distance) * (360/(2*np.pi))
-                      
-    return theta

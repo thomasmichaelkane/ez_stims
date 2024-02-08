@@ -1,0 +1,13 @@
+behavior: LOOP # BOUNCE or LOOP
+stimulus_type: CHECK # CHECK or BAR
+lag: 0 # seconds between each repeat or bounce
+background_color: gray 
+initial_colors: # of bars/checks          
+    - black
+    - white
+velocity: 20 # degrees per second
+cycles: 20 # how many cycles to repeat before finishing
+flip_frequency: 5 # how fast colours flip (Hz)
+number_of_checks: 16 # (will also define bar width - more checks thinner bar width is height/number_of_checks)
+starting_position: 1 # [-1 to 1] -1 is all the way left 0 is centre and 1 is all the way right 
+direction: 1 # [-1 or 1] -1 for moving left or 1 for moving right

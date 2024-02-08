@@ -1,0 +1,8 @@
+resolution:               
+    - 1920 # x pixels
+    - 1080 # y pixels
+frame_rate: 60 # Hz
+screen_width: 34.56 # cm
+viewing_distance: 45 # cm
+screen_number: 0 # 0 1 2... number screen
+ratio_stimulus-screen:    10 # ratio needed for stimulus to fill the screen
