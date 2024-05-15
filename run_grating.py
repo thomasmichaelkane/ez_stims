@@ -1,11 +1,11 @@
 from psychopy import logging
 
-from ez_stims import GStim, Log, setup
+from ez_stims import GratStim, Log, setup
 
 def run():
     
-    gstim_config = setup.config('gstim.yaml')
-    monitor_config = setup.config('monitor.yaml')
+    grating_config = setup.load_config('grating.yaml')
+    monitor_config = setup.load_config('monitor.yaml')
 
     monitor = setup.setup_monitor(**monitor_config)
     window = setup.setup_window(monitor, **monitor_config)
@@ -13,7 +13,7 @@ def run():
     
     logging.console.setLevel(logging.CRITICAL)
     
-    gstim = GStim(gstim_config, monitor_config, log)
+    gstim = GratStim(grating_config, monitor_config, log)
     gstim.add_window(window)
     gstim.add_stimuli()
     
@@ -21,7 +21,7 @@ def run():
     input("Press ENTER to start stimulus...")
     
     gstim.background()
-    gstim.wait()
+    # gstim.wait()
     gstim.start_timer()
     
     gstim.present()

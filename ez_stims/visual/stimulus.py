@@ -1,7 +1,7 @@
 from psychopy import core, visual
 
-from ez_stims.enums import GBehavior
-from ez_stims.utils import *
+from ez_stims.utils.enums import GBehavior
+from ez_stims.utils.util_funcs import *
 
 class Stimulus:
     def __init__(self, window, monitor_config, stimulus_config, size):

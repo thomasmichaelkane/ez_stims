@@ -1,0 +1,49 @@
+global:
+    
+    iterations: 2 # (1...) - number of iterations to repeat all stimuli
+    randomise: True # True/False - randomise the order of stimulus presentation (retained over iterations)
+    
+    # intro - before stimuli begin
+    intro_active: True # True/False
+    intro_duration: 2 # seconds
+    
+    # outro - after stimuli finish
+    outro_active: True # True/False
+    outro_duration: 2 # seconds
+    
+    # baseline - screen between stimuli
+    baseline_duration: 1 # seconds
+    baseline_color:
+        - 0.5 # R (0-1)
+        - 0.5 # G (0-1)
+        - 0.5 # B (0-1)
+
+paradigm:
+  -
+    name:                 flicker_1 # str - can be any unique name, will be used to identify unix timestamps later on    behavior:             FLICKER # FLICKER or DRIFT
+    behavior:             FLICKER
+    duration:             5 # seconds
+    spatial_frequency:    0.1 # cycles/degree
+    orientation:          0.0 # (0.0-360.0) - degrees 0 is vertical bars 90 is horizontal
+    contrast:             1.0 # (0.0-1.0)
+    velocity:             2 # degrees/second
+      
+  -               
+    name:                 drift_1
+    behavior:             DRIFT
+    duration:             5
+    spatial_frequency:    0.3
+    orientation:          90.0
+    contrast:             1.0
+    velocity:             5
+      
+  # -                       ## EXAMPLE OF ADDITIONAL STIMULUS PRESENTATION
+  #   name:                 drift_2
+  #   behavior:             DRIFT
+  #   duration:             3
+  #   spatial_frequency:    0.5
+  #   orientation:          45.0
+  #   contrast:             0.6
+  #   velocity:             15
+
+  # -      ...

@@ -5,4 +5,4 @@ frame_rate: 60 # Hz
 screen_width: 34.56 # cm
 viewing_distance: 45 # cm
 screen_number: 0 # 0 1 2... number screen
-ratio_stimulus-screen:    10 # ratio needed for stimulus to fill the screen
+ratio_stimulus-screen:    10 # ratio needed for stimulus to fill the screen. Just increase this number if the stimulus does not reach the edges of the screen

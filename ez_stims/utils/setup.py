@@ -1,7 +1,7 @@
 import yaml
 from psychopy import visual, monitors
 
-def config(config_file):
+def load_config(config_file):
     
     with open(f"config/{config_file}") as config:
         config = yaml.load(config.read(), Loader=yaml.Loader)

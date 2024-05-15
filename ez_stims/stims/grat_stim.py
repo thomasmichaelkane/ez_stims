@@ -4,10 +4,11 @@ import time
 import sys
 from rich import print as rprint
 
-from ez_stims.stimulus import Stimulus
-from ez_stims.utils import *
+from ez_stims.utils.util_funcs import *
+from ez_stims.visual.stimulus import Stimulus
+from ez_stims.utils.util_funcs import *
 
-class GStim():
+class GratStim():
 
     def __init__(self, config, monitor_config, log):
         
@@ -69,30 +70,34 @@ class GStim():
         
     def present(self):
         
-        if self.is_intro_active():
-            self.intro()
-            
         exp_start_time = self.get_timestamp()
+        
+        if self.is_intro_active():
+            self.intro(exp_start_time)
 
         for i in range(1, self.iterations+1):
             for j in range(self.num_stimuli):
 
+                rprint(f"Baseline", end='\r')
                 self.present_baseline()
-
+                
                 stim_name = self.stimuli[j].get_name()
-                start_time = self.get_timestamp()
+                stim_init_time = self.get_timestamp()
+                stim_init_time_seconds = round((stim_init_time-exp_start_time)/1000, 1)
+                
+                rprint(f"Iteration {i} - Stimulus {stim_name} [{stim_init_time_seconds}]", end='\r')
                 
                 self.present_stimulus(j)
-                end_time = self.get_timestamp()
                 
-                self.log.add_stim(stim_name, i, start_time, end_time)
+                stim_end_time = self.get_timestamp()
+                stim_end_time_seconds = round((stim_end_time-exp_start_time)/1000, 1)
                 
-                stim_init_time_seconds = (start_time-exp_start_time)/1000
+                self.log.add_stim(stim_name, i, stim_init_time, stim_end_time)
                 
-                rprint(f"Starting iteration {i} - Stimulus {stim_name} [{stim_init_time_seconds}]")
-                
+                rprint(f"Iteration {i} - Stimulus {stim_name} [{stim_init_time_seconds}-{stim_end_time_seconds}]")
+        
         if self.is_outro_active():
-            self.outro()
+            self.outro(exp_start_time)
 
     def get_timestamp(self):
         
@@ -116,31 +121,42 @@ class GStim():
         else:
             return None
 
-    def intro(self):
+    def intro(self, exp_start_time):
         
-        intro_start_time = core.Clock()
-        duration = 0
-
-        # advance phase of grating continuously until key press command
-        while duration < self.intro_duration:
-
-            #intro
-            
-            time = core.Clock()
-            duration = intro_start_time - time
-            
-    def outro(self):
+        intro_timer = core.CountdownTimer(self.intro_duration)
+        self.baseline.draw()
+        self.window.flip()
         
-        outro_start_time = core.Clock()
-        duration = 0
+        rprint(f"Intro [0.0]", end='\r')
 
-        # advance phase of grating continuously until key press command
-        while duration < self.outro_duration:
+        while intro_timer.getTime() > 0:
 
-            #intro
-            
-            time = core.Clock()
-            duration = outro_start_time - time
+            pass
+        
+        intro_end_time = self.get_timestamp()
+        intro_end_time_seconds = round((intro_end_time-exp_start_time)/1000, 1)
+        
+        rprint(f"Intro [0.0-{intro_end_time_seconds}]")
+        
+    def outro(self, exp_start_time):
+        
+        outro_timer = core.CountdownTimer(self.outro_duration)
+        self.baseline.draw()
+        self.window.flip()
+        
+        outro_start_time = self.get_timestamp()
+        outro_start_time_seconds = round((outro_start_time-exp_start_time)/1000, 1)
+        
+        rprint(f"Outro [{outro_start_time_seconds}]", end='\r')
+
+        while outro_timer.getTime() > 0:
+
+            pass
+        
+        exp_end_time = self.get_timestamp()
+        exp_end_time_seconds = round((exp_end_time-exp_start_time)/1000, 1)
+        
+        rprint(f"Outro [{outro_start_time_seconds}-{exp_end_time_seconds}]")
 
     def present_baseline(self):
         
