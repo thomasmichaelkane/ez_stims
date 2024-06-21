@@ -1,7 +1,7 @@
-"""Presentation of dots stimulus.
+"""Presentation of single_dot stimulus.
 
 This script allows for timed or continuous presentation of a
-fully customisabe dots stimulus with either coloured bars
+fully customisabe single_dot stimulus with either coloured bars
 or a vertical checkerboard.
 
 Example
@@ -22,18 +22,18 @@ Please navigate to lib/settings/settings.py
 
 There are two dictionaries of settings. The first relates to the 
 monitor used for presentation - these must be changed to the correct 
-values for reproducible results. The second is dots settings 
+values for reproducible results. The second is single_dot settings 
 that can be used to change the stimulus. It is reccomended to save 
 a settings file with the date before changing to again allow for
 reproducability.
 """
 from psychopy import logging
 
-from ez_stims import DotsStim, setup
+from ez_stims import SingleDotStim, setup
 
 def run():
     
-    dots_config = setup.load_config('dots.yaml')
+    single_dot_config = setup.load_config('single_dot.yaml')
     monitor_config = setup.load_config('monitor.yaml')
     
     logging.console.setLevel(logging.CRITICAL)
@@ -41,18 +41,18 @@ def run():
     monitor = setup.setup_monitor(**monitor_config)
     window = setup.setup_window(monitor, **monitor_config)
 
-    dots = DotsStim(dots_config, monitor_config)
-    dots.add_window(window)
+    single_dot = SingleDotStim(single_dot_config, monitor_config)
+    single_dot.add_window(window)
     
-    dots.print_settings()
+    single_dot.print_settings()
     
     # input("Press ENTER to start stimulus...")
 
-    dots.background()
-    # dots.wait()
-    # dots.start_timer()
+    single_dot.background()
+    # single_dot.wait()
+    single_dot.start_timer()
     
-    dots.present()
+    single_dot.present()
 
 if __name__ == '__main__':
     run()

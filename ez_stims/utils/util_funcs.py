@@ -10,6 +10,23 @@ Module Functions:
 
 import numpy as np
 import os
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+
+def get_filenames():
+    
+    Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+    video_filename = askopenfilename(filetypes=[("Scanimage files","*.tif")], title="Select scan") # show an "Open" dialog box and return the path to the selected file
+    log_filename = askopenfilename(filetypes=[("CSV log files","*.csv")], title="Select stimulus log") # show an "Open" dialog box and return the path to the selected file
+    time_filename = askopenfilename(filetypes=[("Start time files","*.txt")], title="Select scan start time file") # show an "Open" dialog box and return the path to the selected file
+
+    # video_filename = "C:/Users/Admin/root/03_Code/01_Python/02_VPR-UCL/_misc/ScanStim/current/misc/test/scan.tif"
+    # log_filename = "C:/Users/Admin/root/03_Code/01_Python/02_VPR-UCL/_misc/ScanStim/current/misc/test/experiment_log_2023-02-23_13-46-06.csv"
+    # time_filename = "C:/Users/Admin/root/03_Code/01_Python/02_VPR-UCL/_misc/ScanStim/current/misc/test/exp_start.txt"
+    
+    video_folder = os.path.split(video_filename)[0]
+    
+    return video_filename, log_filename, time_filename, video_folder
 
 def get_viewing_angle(screen_width, viewing_distance):
     """

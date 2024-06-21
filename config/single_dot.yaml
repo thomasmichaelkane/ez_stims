@@ -1,0 +1,10 @@
+behavior: LOOP # BOUNCE or LOOP
+lag: 1 # seconds between each repeat or bounce
+background_color: black
+dot_color: red
+dot_radius: 0.1
+path_y: 0.5
+velocity: 40 # degrees per second
+cycles: 3 # how many cycles to repeat before finishing
+start_x: 0.3 # [-1 to 1] -1 is all the way left 0 is centre and 1 is all the way right 
+direction: -1 # [-1 or 1] -1 for moving left or 1 for moving right

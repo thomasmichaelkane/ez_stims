@@ -4,4 +4,4 @@ dot_velocity: 8 # arbitrary velocity measure, 1 is slow, 10 is fast
 dot_radius_pix: 50 # radius of each dot in pixels
 spawn_frequency: 3 # Hz
 angle: 45 # 0 is right to left
-num_spawn_loc: 25 # number of spawn locations along the generation line
+num_spawn_loc: 25 # granularity of spawn locations along the generation line

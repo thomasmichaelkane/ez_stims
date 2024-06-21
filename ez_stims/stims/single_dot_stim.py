@@ -1,15 +1,13 @@
-
 from psychopy import event, core, visual
 import time
 import sys
-import numpy as np
 from rich.table import Table
 from rich.console import Console
 
 from ez_stims.utils.util_funcs import *
-from ez_stims.utils.enums import StimType, KBehavior
+from ez_stims.utils.enums import EdgeBehavior
 
-class Kalatsky():
+class SingleDotStim():
 
     def __init__(self, config, monitor_config):
         
@@ -19,44 +17,35 @@ class Kalatsky():
             
         for name, value in config.items():
             setattr(self, name, value)
-            
-        self.stimulus_type = StimType[self.stimulus_type]
-        self.behavior = KBehavior[self.behavior]
 
         # initialise variables and left and right check arrays
-        self.flipped = False
-        self.checks_left = []
-        self.checks_right = []
         self.cycles_complete = 0
 
         # calculate viewing angle and resolution ratio
         self.viewing_angle = get_viewing_angle(self.screen_width, self.viewing_distance)
         self.resolution_ratio = self.resolution[1]/self.resolution[0]
+        
+        self.behavior = EdgeBehavior[self.behavior]
 
         # force direction if at an end location
-        if self.starting_position == 1:
+        if self.start_x == 1:
             self.direction = -1
-        elif self.starting_position == -1:
+        elif self.start_x == -1:
             self.direction = 1
+            
+        self.dot_width = self.dot_radius
+        self.dot_height = self.dot_width/self.resolution_ratio
         
         # calculate time varaibles
         self.cycle_period = self.viewing_angle/self.velocity
         self.phase_advance = self.resolution_ratio * (2/(self.cycle_period*self.frame_rate)) * self.direction
-        self.flip_period = 1/self.flip_frequency 
-        
-        # calculate size variables
-        self.check_height = 2/self.number_of_checks
-        self.check_width = self.check_height * self.resolution_ratio
-        self.stim_width = (self.check_width*self.viewing_angle)
-        self.loop_change = (2*self.check_width) + 2
+        self.loop_change = (2*self.dot_radius) + 2
 
         # find true starting position (weighted to ensure 1/-1 is offscreen)
-        self.starting_position = self.starting_position * (1+self.check_width)/1
+        self.start_x = self.start_x * (1+self.dot_radius)/1
         
         # setup x coordinate variables
-        self.centre = self.starting_position
-        self.left_x = self.centre-(self.check_width/2)
-        self.right_x = self.centre+(self.check_width/2)
+        self.dot_x = self.start_x
             
     # methods
     def add_window(self, window):
@@ -111,27 +100,12 @@ class Kalatsky():
     def present(self):
         """ Prsent Kalatsky stimulus """
         
-        flip_timer = core.CountdownTimer(self.flip_period)
-        colors = self.initial_colors
-        
-        # draw checkerboard or bars
-        for i in np.linspace(start=(self.check_height/2)-1, stop=1-(self.check_height/2), num=self.number_of_checks):
-        
-            self.checks_left.append(visual.Rect(self.window, 
-                                    size=(self.check_width, self.check_height), 
-                                    units="norm",
-                                    fillColor=colors[0],
-                                    pos=(self.left_x, i),
-                                    autoDraw=True))
-            
-            self.checks_right.append(visual.Rect(self.window, 
-                                    size=(self.check_width, self.check_height), 
-                                    units="norm",
-                                    fillColor=colors[1],
-                                    pos=(self.right_x, i),
-                                    autoDraw=True))
-            
-            if self.stimulus_type.name == "CHECK": colors.reverse()
+        self.dot = visual.Circle(self.window, 
+                                size=(self.dot_width, self.dot_height), 
+                                units="norm",
+                                fillColor=self.dot_color,
+                                pos=(self.start_x, self.path_y),
+                                autoDraw=True)
         
         self.window.flip()
         
@@ -142,35 +116,11 @@ class Kalatsky():
             
             self.advance()
             
-            # when flip timer ends, reverse colours and reset timer
-            if flip_timer.getTime() <= 0: 
-                
-                self.flip_stim()
-                flip_timer.reset()
-            
             # end if return is pressed  
             if key == "return":
 
                 self.window.close()
                 sys.exit()
-        
-    def flip_stim(self):
-        """ Reverse the colours of checks or bars """
-
-        if self.flipped is True:
-            colors = self.initial_colors
-            colors.reverse()
-        else:
-            colors = self.initial_colors
-
-        for i in range(len(self.checks_left)):
-            
-            self.checks_left[i].color = colors[1]
-            self.checks_right[i].color = colors[0]
-            if self.stimulus_type.name == "CHECK": colors.reverse()
-            
-        self.flipped = not self.flipped
-        self.window.flip()
          
     def advance(self):
         """ Advance the moving checks or bars """
@@ -183,36 +133,34 @@ class Kalatsky():
             
             self.check_repeat()
             
-        self.centre += self.phase_advance
+        self.dot_x += self.phase_advance
         self.update_pos(self.phase_advance)
         self.window.flip()
                 
     def check_reflect(self):
         
-        if (self.centre < -self.check_width-1) or (self.centre > 1+self.check_width):
+        if (self.dot_x < -self.dot_radius-1) or (self.dot_x > 1+self.dot_radius):
                 
             self.phase_advance = -self.phase_advance
             self.new_cycle()
                 
     def check_repeat(self):
         
-        if (self.centre < -self.check_width-1):
+        if (self.dot_x < -self.dot_radius-1):
             
-            self.centre = self.centre + self.loop_change
+            self.dot_x = self.dot_x + self.loop_change
             self.update_pos(self.loop_change)
             self.new_cycle()
             
-        elif (self.centre > 1+self.check_width):
+        elif (self.dot_x > 1+self.dot_radius):
             
-            self.centre = self.centre - self.loop_change
+            self.dot_x = self.dot_x - self.loop_change
             self.update_pos(-self.loop_change)
             self.new_cycle()
             
     def update_pos(self, increment):
-        
-        for i in range(len(self.checks_left)):
-            self.checks_left[i].pos += (increment, 0)
-            self.checks_right[i].pos += (increment, 0)
+
+        self.dot.pos += (increment, 0)
             
     def new_cycle(self):
         
@@ -228,7 +176,6 @@ class Kalatsky():
         table.add_column("value", justify="right", style="magenta")
         
         table.add_row("viewing angle", "degrees", "{:.1f}".format(self.viewing_angle))
-        table.add_row("stimulus width", "degrees", "{:.1f}".format(self.stim_width))
         table.add_row("cycle period", "seconds", "{:.2f}".format(self.cycle_period))
         table.add_row("number of cycles", "--", "{:d}".format(self.cycles))
         

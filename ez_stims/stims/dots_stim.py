@@ -1,4 +1,3 @@
-
 from psychopy import event, core, visual
 import time
 import sys
@@ -7,11 +6,12 @@ import math
 import random
 from rich.table import Table
 from rich.console import Console
+import gc
 
 from ez_stims.utils.util_funcs import *
 from ez_stims.visual.geometry import tangent_linspace
 
-class DotStim():
+class DotsStim():
 
     def __init__(self, config, monitor_config):
         
@@ -32,6 +32,9 @@ class DotStim():
         # calculate time varaibles
         self.phase_advance = -(self.resolution_ratio * self.dot_velocity * 100)/self.frame_rate
         self.spawn_period = 1/self.spawn_frequency 
+        
+        self.max_dots = 50*(self.spawn_frequency/self.dot_velocity)
+        print(self.max_dots)
         
         self.angle_rad = math.radians(self.angle)
         self.x_increment = np.cos(self.angle_rad) * self.phase_advance
@@ -102,9 +105,9 @@ class DotStim():
         """ Prsent Kalatsky stimulus """
         
         spawn_timer = core.CountdownTimer(self.spawn_period)
-        kill_timer = core.CountdownTimer(self.kill_delay)
+        # kill_timer = core.CountdownTimer(self.kill_delay)
         
-        self.killing = False
+        # self.killing = False
 
         # play kalatsky stimulus
         while True:
@@ -112,20 +115,19 @@ class DotStim():
             key = self.get_keypress()
             
             self.advance()
-            
-            if kill_timer <= 0:
-                self.killing = True
-            
+
             # when flip timer ends, reverse colours and reset timer
             if spawn_timer.getTime() <= 0:
                 
-                # self.flip_stim()
-                self.spawn_dot()
+                self.delete_dots()
                 spawn_timer.reset()
                 print("Dot count: " + str(len(self.dots)), end="\r")
-
-                # if killing:
-                #     self.delete_dots()
+                
+                if len(self.dots) < self.max_dots:
+                
+                    # self.flip_stim()
+                    gc.collect()
+                    self.spawn_dot()
             
             # end if return is pressed  
             if key == "return":
@@ -150,7 +152,6 @@ class DotStim():
             # remove old dots
             if (abs(self.dots[i].pos[0]) > self.screen_circle_radius*1.5) or (abs(self.dots[i].pos[1]) > self.screen_circle_radius*1.5):
                 self.dots.pop(i)
-                print("dot deleted")
                 break
     
     def spawn_dot(self):

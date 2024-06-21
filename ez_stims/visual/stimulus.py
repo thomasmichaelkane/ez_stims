@@ -1,6 +1,6 @@
 from psychopy import core, visual
 
-from ez_stims.utils.enums import GBehavior
+from ez_stims.utils.enums import GratBehavior
 from ez_stims.utils.util_funcs import *
 
 class Stimulus:
@@ -12,7 +12,7 @@ class Stimulus:
         for name, value in stimulus_config.items():
             setattr(self, name, value)
             
-        self.behavior = GBehavior[self.behavior]
+        self.behavior = GratBehavior[self.behavior]
             
         self.size = size            
         
